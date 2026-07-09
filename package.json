@@ -1,0 +1,10 @@
+{
+  "name": "qds-web-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix qds-web run dev",
+    "build": "npm --prefix qds-web run build",
+    "start": "npm --prefix qds-web run start",
+    "lint": "npm --prefix qds-web run lint"
+  }
+}
