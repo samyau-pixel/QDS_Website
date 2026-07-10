@@ -6,7 +6,7 @@ import Container from '@/components/layout/container';
 import Breadcrumbs from '@/components/layout/breadcrumbs';
 import OfferingList from '@/components/marketing/offering-list';
 import RelatedContent from '@/components/marketing/related-content';
-import { loadContentEntries } from '@/lib/content/fs-content';
+import { isVendorProfileEntry, isVendorSolutionEntry, loadContentEntries } from '@/lib/content/fs-content';
 
 interface VendorPageProps {
   params: Promise<{ vendorSlug: string }>;
@@ -14,14 +14,12 @@ interface VendorPageProps {
 
 export async function generateStaticParams() {
   const entries = await loadContentEntries('vendors');
-  return entries
-    .filter((entry) => entry.status === 'published' && entry.pathSegments.length === 3 && entry.pathSegments[2] === `${entry.slug}.mdx`)
-    .map((vendor) => ({ vendorSlug: vendor.slug }));
+  return entries.filter(isVendorProfileEntry).map((vendor) => ({ vendorSlug: vendor.slug }));
 }
 
 export async function generateMetadata({ params }: VendorPageProps): Promise<Metadata> {
   const { vendorSlug } = await params;
-  const vendor = (await loadContentEntries('vendors')).find((entry) => entry.slug === vendorSlug && entry.pathSegments.length === 3);
+  const vendor = (await loadContentEntries('vendors')).find((entry) => isVendorProfileEntry(entry) && entry.slug === vendorSlug);
 
   if (!vendor) {
     return { title: 'Vendor Not Found | Quantum Data Systems' };
@@ -36,15 +34,13 @@ export async function generateMetadata({ params }: VendorPageProps): Promise<Met
 export default async function VendorDetailPage({ params }: VendorPageProps) {
   const { vendorSlug } = await params;
   const entries = await loadContentEntries('vendors');
-  const vendor = entries.find((entry) => entry.slug === vendorSlug && entry.pathSegments.length === 3);
+  const vendor = entries.find((entry) => isVendorProfileEntry(entry) && entry.slug === vendorSlug);
 
   if (!vendor) {
     notFound();
   }
 
-  const vendorSolutions = entries.filter(
-    (entry) => entry.status === 'published' && entry.pathSegments[0] === 'vendors' && entry.pathSegments[1] === vendorSlug && entry.pathSegments[2] === 'solutions'
-  );
+  const vendorSolutions = entries.filter((entry) => isVendorSolutionEntry(entry, vendorSlug));
   const categories = await loadContentEntries('categories');
   const relatedCategories = categories.filter((entry) => vendor.relatedCategoryIds.includes(entry.id));
 

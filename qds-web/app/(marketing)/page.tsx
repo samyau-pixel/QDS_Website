@@ -23,8 +23,8 @@ export default function HomePage() {
     headline: 'Data Center Infrastructure Solutions That Drive Efficiency',
     subheadline: 'From aisle containment to smart rack systems, we help you optimize every aspect of your data center operations.',
     primaryCta: {
-      label: 'Explore Our Solutions',
-      href: '/solutions',
+      label: 'Explore Our Categories',
+      href: '/categories',
       style: 'primary',
     },
     secondaryCta: {

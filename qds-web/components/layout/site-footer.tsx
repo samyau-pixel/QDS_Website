@@ -16,7 +16,6 @@ export default function SiteFooter() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/vendors" className="text-slate-400 hover:text-white">Vendors</Link></li>
               <li><Link href="/categories" className="text-slate-400 hover:text-white">Categories</Link></li>
-              <li><Link href="/solutions" className="text-slate-400 hover:text-white">Solutions</Link></li>
             </ul>
           </div>
           <div>

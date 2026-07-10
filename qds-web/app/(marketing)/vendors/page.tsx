@@ -3,7 +3,7 @@ import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
 import Link from 'next/link';
-import { loadContentEntries } from '@/lib/content/fs-content';
+import { isVendorProfileEntry, loadContentEntries } from '@/lib/content/fs-content';
 
 export const metadata: Metadata = {
   title: 'Vendors | Quantum Data Systems',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function VendorsPage() {
   const entries = await loadContentEntries('vendors');
-  const vendors = entries.filter((entry) => entry.status === 'published' && entry.pathSegments.length === 3 && entry.pathSegments[2] === `${entry.slug}.mdx`);
+  const vendors = entries.filter(isVendorProfileEntry);
 
   return (
     <>

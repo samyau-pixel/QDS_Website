@@ -20,11 +20,6 @@ export default function SiteHeader() {
               </Link>
             </li>
             <li>
-              <Link href="/solutions" className="text-slate-700 hover:text-blue-600">
-                Solutions
-              </Link>
-            </li>
-            <li>
               <Link href="/contact" className="text-blue-600 hover:text-blue-800 font-medium">
                 Contact
               </Link>

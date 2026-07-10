@@ -8,8 +8,7 @@
       "url": [
         "http://localhost:3000/",
         "http://localhost:3000/vendors",
-        "http://localhost:3000/categories",
-        "http://localhost:3000/solutions"
+        "http://localhost:3000/categories"
       ]
     },
     "upload": {

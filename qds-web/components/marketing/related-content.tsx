@@ -6,14 +6,13 @@ interface RelatedContentProps {
     id: string;
     name: string;
     summary: string;
-    type: 'vendor' | 'category' | 'solution';
+    type: 'vendor' | 'category';
   }>;
 }
 
 const hrefByType: Record<RelatedContentProps['items'][number]['type'], string> = {
   vendor: '/vendors',
   category: '/categories',
-  solution: '/solutions',
 };
 
 export default function RelatedContent({ title, items }: RelatedContentProps) {

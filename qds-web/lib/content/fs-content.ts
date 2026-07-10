@@ -111,9 +111,29 @@ async function readMdxFiles(basePath: string, relativeRoot = ''): Promise<FsCont
 
 export async function loadContentEntries(folderName: string): Promise<FsContentEntry[]> {
   const folderPath = path.join(process.cwd(), 'content', folderName);
-  return readMdxFiles(folderPath);
+  return readMdxFiles(folderPath, folderName);
 }
 
 export async function loadAllContentEntries(): Promise<FsContentEntry[]> {
   return readMdxFiles(path.join(process.cwd(), 'content'));
+}
+
+export function isVendorProfileEntry(entry: FsContentEntry): boolean {
+  return (
+    entry.status === 'published' &&
+    entry.pathSegments[0] === 'vendors' &&
+    entry.pathSegments.length === 3 &&
+    entry.pathSegments[1] === entry.slug &&
+    entry.pathSegments[2] === `${entry.slug}.mdx`
+  );
+}
+
+export function isVendorSolutionEntry(entry: FsContentEntry, vendorSlug?: string): boolean {
+  return (
+    entry.status === 'published' &&
+    entry.pathSegments[0] === 'vendors' &&
+    entry.pathSegments.length === 4 &&
+    entry.pathSegments[2] === 'solutions' &&
+    (vendorSlug ? entry.pathSegments[1] === vendorSlug : true)
+  );
 }
