@@ -9,7 +9,7 @@ Stand up the Quantum Data Systems B2B marketing site as a static-first Next.js a
 - Node.js 20 LTS
 - npm, pnpm, or yarn
 - Vercel account and project for preview and production deployments
-- Access to company branding assets, partner logos, and initial content drafts
+- Access to company branding assets, vendor logos, and initial content drafts
 
 ## Suggested Setup
 
@@ -38,14 +38,14 @@ content-collections.ts
 
 ## Content Setup
 
-1. Create typed collections for `siteSettings`, `homePage`, `partners`, `categories`, `offerings`, and `solutions`.
+1. Create typed collections for `siteSettings`, `homePage`, `vendors`, `categories`, and reusable content blocks.
 2. Add schema validation for required fields, relationship IDs, and publication state.
-3. Seed initial entries for Huawei, Sunbird DCIM, Vertiv, Aisle Containment, Airflow Management, Smart Rack, and at least one solution page.
+3. Seed initial entries for Huawei, Sunbird DCIM, Vertiv, Aisle Containment, Airflow Management, Smart Rack, and the nested vendor leaf content they reference.
 4. Add redirect definitions for future slug changes.
 
 ## Rendering Strategy
 
-1. Implement static route generation for partner, category, and solution detail pages with `generateStaticParams()`.
+1. Implement static route generation for vendor and category detail pages with `generateStaticParams()`.
 2. Keep canonical content pages statically rendered.
 3. Reserve ISR for derived or externally mutable data only.
 4. Use `proxy.ts` for regional CTA or campaign-level personalization without changing canonical body content.
@@ -67,8 +67,8 @@ npx lhci autorun
 
 ## Validation Checklist
 
-1. Home page communicates the company value proposition and routes to partners, categories, and solutions.
-2. Partner, category, and solution pages render from typed content entries.
+1. Home page communicates the company value proposition and routes to vendors and categories.
+2. Vendor and category pages render from typed content entries.
 3. Lighthouse targets meet the thresholds defined in the plan.
 4. Accessibility checks pass on core templates.
 5. Edge personalization does not alter canonical metadata or break cache behavior.

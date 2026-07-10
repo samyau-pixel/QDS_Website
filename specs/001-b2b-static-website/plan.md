@@ -8,7 +8,7 @@
 
 ## Summary
 
-Build a fast, SEO-optimized B2B marketing website for Quantum Data Systems using Next.js App Router with primarily static rendering, MDX-authored rich content, type-safe content collections, Tailwind CSS, and Vercel deployment. The site will use SSG for canonical marketing pages, selective ISR for mutable derived content, and limited Edge Functions for low-risk personalization and form routing while preserving consistent SEO and performance.
+Build a fast, SEO-optimized B2B marketing website for Quantum Data Systems using Next.js App Router with primarily static rendering, MDX-authored rich content, type-safe content collections, Tailwind CSS, and Vercel deployment. The site uses SSG for canonical marketing pages, selective ISR for mutable derived content, and limited Edge Functions for low-risk personalization and form routing while preserving consistent SEO and performance. The current public release is vendor-and-category focused; solution pages are not part of the canonical route set.
 
 ## Technical Context
 
@@ -28,7 +28,7 @@ Build a fast, SEO-optimized B2B marketing website for Quantum Data Systems using
 
 **Constraints**: Canonical content must stay SEO-stable, Edge runtime cannot host ISR routes, content edits in repository require deploy publish, initial route JS under 100KB gzipped for home and under 130KB for detail pages, WCAG 2.1 AA for core journeys, request-time personalization and legacy redirects are handled through `proxy.ts` rather than `middleware.ts`
 
-**Scale/Scope**: Initial release covers home, partner index/detail, category index/detail, solution index/detail, contact path, shared layout and content model templates, and extensible collections for dozens of partners/categories/solutions
+**Scale/Scope**: Initial release covers home, vendor index/detail, category index/detail, contact path, shared layout and content model templates, and extensible collections for dozens of vendors/categories/offerings
 
 ## Constitution Check
 
@@ -63,15 +63,14 @@ specs/001-b2b-static-website/
 app/
 ├── (marketing)/
 │   ├── page.tsx
-│   ├── partners/
+│   ├── vendors/
 │   │   ├── page.tsx
-│   │   └── [partnerSlug]/page.tsx
+│   │   └── [vendorSlug]/page.tsx
 │   ├── categories/
 │   │   ├── page.tsx
 │   │   └── [categorySlug]/page.tsx
-│   ├── solutions/
-│   │   ├── page.tsx
-│   │   └── [solutionSlug]/page.tsx
+│   ├── partners/
+│   │   └── [partnerSlug]/page.tsx
 │   └── contact/page.tsx
 ├── api/
 │   └── contact/route.ts
@@ -80,9 +79,10 @@ app/
 
 content/
 ├── site/
-├── partners/
+├── vendors/
 ├── categories/
-├── solutions/
+├── offerings/
+├── solutions/  (archived source content, not canonical routes)
 └── shared/
 
 components/
@@ -106,7 +106,7 @@ tests/
 └── unit/
 ```
 
-**Structure Decision**: Use a single Next.js App Router project with repository-backed content collections. This keeps the feature static-first, preserves SEO-friendly routing, and avoids unnecessary separation into frontend/backend projects for a mostly static marketing workload.
+**Structure Decision**: Use a single Next.js App Router project with repository-backed content collections. This keeps the feature static-first, preserves SEO-friendly routing, and avoids unnecessary separation into frontend/backend projects for a mostly static marketing workload. The current public routes are home, vendors, categories, and contact, with legacy partner redirects retained for compatibility.
 
 ## Complexity Tracking
 

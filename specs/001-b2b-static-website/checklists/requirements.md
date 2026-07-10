@@ -32,5 +32,5 @@
 ## Notes
 
 - Validation pass 1 completed successfully.
-- The spec assumes an informational first release with reusable templates for partner, category, and solution detail pages.
+- The spec assumes an informational first release with reusable templates for vendor and category detail pages.
 - The content hierarchy supplied by the user includes ellipsis entries; the specification treats those as extensible collections rather than fixed page limits.

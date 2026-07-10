@@ -30,18 +30,17 @@ The site uses repository-backed, type-safe content collections with build-time v
   - `id`: stable identifier
   - `hero`: object with headline, subheadline, primary CTA, secondary CTA, hero visual
   - `intro`: rich text or MDX summary
-  - `featuredPartners`: array of partner IDs
+  - `featuredVendors`: array of vendor IDs
   - `featuredCategories`: array of category IDs
-  - `featuredSolutions`: array of solution IDs
   - `trustSignals`: array of stat or badge blocks
   - `seo`: SEO metadata override
 - Validation rules:
   - all featured references must exist and be published
   - hero must include at least one CTA
 
-### Partner
+### Vendor
 
-- Purpose: Partner detail page and listing metadata.
+- Purpose: Vendor detail page and listing metadata.
 - Fields:
   - `id`: stable identifier
   - `slug`: derived from title or explicit source field
@@ -52,7 +51,7 @@ The site uses repository-backed, type-safe content collections with build-time v
   - `body`: MDX content
   - `certifications`: array of strings or badge objects
   - `relatedCategoryIds`: array of category IDs
-  - `relatedSolutionIds`: array of solution IDs
+  - `relatedSolutionIds`: array of solution or leaf-offering IDs
   - `relatedOfferingIds`: array of offering IDs
   - `seo`: SEO metadata override
   - `redirectFrom`: array of legacy slugs
@@ -94,28 +93,7 @@ The site uses repository-backed, type-safe content collections with build-time v
   - `status`: draft or published
 - Validation rules:
   - published offerings require at least one category
-  - linked partners and categories must exist
-
-### Solution
-
-- Purpose: Business-oriented page that ties client problems to offerings and partner capabilities.
-- Fields:
-  - `id`: stable identifier
-  - `slug`: derived field
-  - `name`: string
-  - `problemStatement`: string
-  - `targetIndustries`: array of strings
-  - `outcomes`: array of strings
-  - `body`: MDX content
-  - `relatedPartnerIds`: array of partner IDs
-  - `relatedCategoryIds`: array of category IDs
-  - `relatedOfferingIds`: array of offering IDs
-  - `primaryCta`: CTA reference
-  - `seo`: SEO metadata override
-  - `status`: draft or published
-- Validation rules:
-  - published solutions require a problem statement, at least one outcome, and a primary CTA
-  - all related references must exist
+  - linked vendors and categories must exist
 
 ### CallToAction
 
@@ -143,13 +121,12 @@ The site uses repository-backed, type-safe content collections with build-time v
 
 ## Relationships
 
-- HomePage references many Partners, Categories, and Solutions.
-- Partner relates to many Categories, Solutions, and Offerings.
-- Category relates to many Partners, Solutions, and Offerings.
-- Offering belongs to one or more Categories and may reference many Partners.
-- Solution relates to many Partners, Categories, and Offerings.
-- CallToAction may be embedded in HomePage or Solution content.
-- Redirect supports Partner, Category, and Solution slug migrations.
+- HomePage references many Vendors and Categories.
+- Vendor relates to many Categories and Offerings.
+- Category relates to many Vendors and Offerings.
+- Offering belongs to one or more Categories and may reference many Vendors.
+- CallToAction may be embedded in HomePage or detail content.
+- Redirect supports Vendor and Category slug migrations.
 
 ## State Model
 

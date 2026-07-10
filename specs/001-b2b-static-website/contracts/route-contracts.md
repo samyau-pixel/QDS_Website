@@ -13,26 +13,26 @@ Define the public route structure and runtime expectations for the Quantum Data 
 - Inputs: `siteSettings`, `homePage`, featured published entities
 - Guarantees:
   - returns canonical SEO metadata
-  - includes navigation to partners, categories, and solutions
+  - includes navigation to vendors and categories
   - includes at least one contact-oriented CTA
 
-### `GET /partners`
+### `GET /vendors`
 
-- Purpose: Partner index page
+- Purpose: Vendor index page
 - Rendering: Static generation
-- Inputs: published `partners`
+- Inputs: published `vendors`
 - Guarantees:
-  - lists published partner entries only
-  - each listed partner links to a canonical detail route
+  - lists published vendor entries only
+  - each listed vendor links to a canonical detail route
 
-### `GET /partners/[partnerSlug]`
+### `GET /vendors/[vendorSlug]`
 
-- Purpose: Partner detail page
+- Purpose: Vendor detail page
 - Rendering: Static generation
-- Inputs: published `partner` entry and resolved related entities
+- Inputs: published `vendor` entry and resolved related entities
 - Guarantees:
   - unknown slugs return not found
-  - legacy slugs redirect according to redirect mappings
+  - nested vendor profile content is used as the canonical source for the page
   - canonical metadata and related content blocks are present
 
 ### `GET /categories`
@@ -52,24 +52,6 @@ Define the public route structure and runtime expectations for the Quantum Data 
 - Guarantees:
   - unknown slugs return not found
   - page presents enough content to avoid empty-state navigation dead ends
-
-### `GET /solutions`
-
-- Purpose: Solution index page
-- Rendering: Static generation
-- Inputs: published `solutions`
-- Guarantees:
-  - lists published solution entries only
-  - each listed solution links to a canonical detail route
-
-### `GET /solutions/[solutionSlug]`
-
-- Purpose: Solution detail page
-- Rendering: Static generation
-- Inputs: published `solution` entry and related entities
-- Guarantees:
-  - page stands alone as a solution explanation and conversion path
-  - includes primary CTA and related exploration paths
 
 ### `GET /contact`
 
@@ -129,3 +111,21 @@ Define the public route structure and runtime expectations for the Quantum Data 
 - ISR, if used, stays on Node-compatible handlers or derived artifacts.
 - Edge runtime is limited to request-time routing and personalization that does not undermine SEO stability.
 - Unknown canonical slugs must return not found rather than fallback-rendering unintended pages.
+
+## Legacy Redirect Routes
+
+### `GET /partners`
+
+- Purpose: Legacy redirect to the vendor index
+- Rendering: Redirect
+- Inputs: legacy partner URL
+- Guarantees:
+  - resolves to `/vendors`
+
+### `GET /partners/[partnerSlug]`
+
+- Purpose: Legacy redirect to vendor detail pages
+- Rendering: Redirect
+- Inputs: legacy partner slug
+- Guarantees:
+  - resolves to the matching `/vendors/[vendorSlug]` route when available

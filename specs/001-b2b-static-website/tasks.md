@@ -49,9 +49,9 @@
 
 ## Phase 3: User Story 1 - Understand company offerings from the home page (Priority: P1) 🎯 MVP
 
-**Goal**: Deliver a clear, branded home page that explains Quantum Data Systems' value proposition and routes visitors to partners, categories, and solutions.
+**Goal**: Deliver a clear, branded home page that explains Quantum Data Systems' value proposition and routes visitors to vendors and categories.
 
-**Independent Test**: Visit `/` on desktop and mobile widths and confirm that the company message, featured offerings, and primary navigation to partners, categories, and solutions are all visible and usable without relying on any other route.
+**Independent Test**: Visit `/` on desktop and mobile widths and confirm that the company message, featured offerings, and primary navigation to vendors and categories are all visible and usable without relying on any other route.
 
 ### Implementation for User Story 1
 
@@ -65,40 +65,36 @@
 
 ---
 
-## Phase 4: User Story 2 - Explore partners and categories relevant to a business need (Priority: P2)
+## Phase 4: User Story 2 - Explore vendors and categories relevant to a business need (Priority: P2)
 
-**Goal**: Let visitors browse partner and category listings, open detail pages, and understand the offerings connected to each area.
+**Goal**: Let visitors browse vendor and category listings, open detail pages, and understand the offerings connected to each area.
 
-**Independent Test**: Visit `/partners` and `/categories`, open at least one partner detail and one category detail page, and confirm that each page has valid overview content, related links, and offering information without depending on solution pages.
+**Independent Test**: Visit `/vendors` and `/categories`, open at least one vendor detail and one category detail page, and confirm that each page has valid overview content, related links, and offering information without depending on any additional public route.
 
 ### Implementation for User Story 2
 
-- [X] T021 [P] [US2] Seed partner detail content in content/partners/huawei.mdx, content/partners/sunbird-dcim.mdx, and content/partners/vertiv.mdx
-- [X] T022 [P] [US2] Seed category and offering content in content/categories/aisle-containment.mdx, content/categories/airflow-management.mdx, content/categories/smart-rack.mdx, content/offerings/gem2-generation-modular.mdx, content/offerings/aislelok.mdx, content/offerings/koldlok.mdx, content/offerings/hotlok.mdx, and content/offerings/austin-hughes.mdx
-- [X] T023 [P] [US2] Implement partner and category card, offering list, and related-content components in components/marketing/partner-card.tsx, components/marketing/category-card.tsx, components/marketing/offering-list.tsx, and components/marketing/related-content.tsx
-- [X] T024 [US2] Implement the partners index and partner detail routes with filesystem-backed MDX content in app/(marketing)/partners/page.tsx and app/(marketing)/partners/[partnerSlug]/page.tsx
+- [X] T021 [P] [US2] Seed vendor detail content in content/vendors/huawei/huawei.mdx, content/vendors/sunbird-dcim/sunbird-dcim.mdx, and content/vendors/vertiv/vertiv.mdx
+- [X] T022 [P] [US2] Seed category and nested vendor offering content in content/categories/aisle-containment.mdx, content/categories/airflow-management.mdx, content/categories/smart-rack.mdx, and content/vendors/*/solutions/*.mdx
+- [X] T023 [P] [US2] Implement vendor and category card, offering list, and related-content components in components/marketing/vendor-card.tsx, components/marketing/category-card.tsx, components/marketing/offering-list.tsx, and components/marketing/related-content.tsx
+- [X] T024 [US2] Implement the vendors index and vendor detail routes with filesystem-backed MDX content in app/(marketing)/vendors/page.tsx and app/(marketing)/vendors/[vendorSlug]/page.tsx
 - [X] T025 [US2] Implement the categories index and category detail routes with filesystem-backed MDX content in app/(marketing)/categories/page.tsx and app/(marketing)/categories/[categorySlug]/page.tsx
-- [X] T026 [US2] Add breadcrumbs, canonical metadata, and legacy redirect handling for partner and category pages in components/layout/breadcrumbs.tsx, lib/seo/metadata.ts, and proxy.ts
+- [X] T026 [US2] Add breadcrumbs, canonical metadata, and legacy redirect handling for vendor and category pages in components/layout/breadcrumbs.tsx, lib/seo/metadata.ts, and proxy.ts
 
-**Checkpoint**: User Stories 1 and 2 both work independently, with partner and category discovery fully navigable.
+**Checkpoint**: User Stories 1 and 2 both work independently, with vendor and category discovery fully navigable.
 
 ---
 
-## Phase 5: User Story 3 - Evaluate detailed solutions and move toward contact or follow-up (Priority: P3)
+## Phase 5: Removed from Current Scope
 
-**Goal**: Present business-oriented solution pages with clear outcomes, related offerings, and a conversion path to contact Quantum Data Systems.
+**Note**: The original solution-page story was removed from the current public site. The following archived tasks remain for historical traceability only.
 
-**Independent Test**: Visit `/solutions`, open a solution detail page, confirm it explains the business problem and relevant offerings, then submit or validate the contact path from the solution context.
+- [X] T027 [US3] Archived solution content seed files in content/solutions/data-center-airflow-optimization.mdx and content/solutions/modular-rack-modernization.mdx
+- [X] T028 [US3] Archived solution-focused UI components in components/marketing/solution-hero.tsx, components/marketing/solution-outcomes.tsx, and components/forms/contact-form.tsx
+- [X] T029 [US3] Archived the solution index and solution detail routes in app/(marketing)/solutions/page.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
+- [X] T030 [US3] Archived the contact page and inquiry submission flow in app/(marketing)/contact/page.tsx and app/api/contact/route.ts
+- [X] T031 [US3] Archived related partner, category, and solution navigation plus primary CTAs on solution pages in components/marketing/related-content.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
 
-### Implementation for User Story 3
-
-- [X] T027 [P] [US3] Seed solution content and cross-links in content/solutions/data-center-airflow-optimization.mdx and content/solutions/modular-rack-modernization.mdx
-- [X] T028 [P] [US3] Implement solution-hero, solution-outcomes, and contact-form components in components/marketing/solution-hero.tsx, components/marketing/solution-outcomes.tsx, and components/forms/contact-form.tsx
-- [X] T029 [US3] Implement the solutions index and solution detail routes with filesystem-backed MDX content in app/(marketing)/solutions/page.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
-- [X] T030 [US3] Implement the contact page and inquiry submission flow in app/(marketing)/contact/page.tsx and app/api/contact/route.ts
-- [X] T031 [US3] Connect related partner, category, and solution navigation plus primary CTAs on solution pages in components/marketing/related-content.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
-
-**Checkpoint**: All three user stories are independently functional, including solution evaluation and contact follow-up.
+**Checkpoint**: The current public site scope is vendors, categories, and contact.
 
 ---
 
@@ -107,12 +103,12 @@
 **Purpose**: Finalize quality gates, discoverability, performance, and authoring guidance across the full site.
 
 - [X] T032 [P] Add schema and route contract validation coverage in tests/contract/content-schema.spec.ts, tests/contract/route-contracts.spec.ts, and tests/unit/content-resolver.spec.ts
-- [X] T033 [P] Add end-to-end coverage for the primary journeys in tests/integration/home.spec.ts, tests/integration/partners-categories.spec.ts, and tests/integration/solutions-contact.spec.ts
+- [X] T033 [P] Add end-to-end coverage for the primary journeys in tests/integration/home.spec.ts, tests/integration/vendors-categories.spec.ts, and tests/integration/contact.spec.ts
 - [X] T034 [P] Implement sitemap and robots generation in app/sitemap.ts and app/robots.ts
-- [ ] T035 Optimize accessibility, performance, and responsive behavior across core templates in app/(marketing)/page.tsx, app/(marketing)/partners/[partnerSlug]/page.tsx, app/(marketing)/categories/[categorySlug]/page.tsx, and app/(marketing)/solutions/[solutionSlug]/page.tsx
+- [ ] T035 Optimize accessibility, performance, and responsive behavior across core templates in app/(marketing)/page.tsx, app/(marketing)/vendors/[vendorSlug]/page.tsx, and app/(marketing)/categories/[categorySlug]/page.tsx
 - [ ] T036 [P] Document content authoring, publishing, and validation workflow in README.md and specs/001-b2b-static-website/quickstart.md
 - [ ] T037 Run the full quickstart validation and CI baseline updates in specs/001-b2b-static-website/quickstart.md and .github/workflows/ci.yml
-- [X] T038 Refactor partner and solution listing and detail routes to generate from MDX files using the shared filesystem content loader in app/(marketing)/partners/page.tsx, app/(marketing)/partners/[partnerSlug]/page.tsx, app/(marketing)/solutions/page.tsx, app/(marketing)/solutions/[solutionSlug]/page.tsx, and lib/content/fs-content.ts
+- [X] T038 Refactor vendor listing and detail routes to generate from MDX files using the shared filesystem content loader in app/(marketing)/vendors/page.tsx, app/(marketing)/vendors/[vendorSlug]/page.tsx, and lib/content/fs-content.ts
 
 ---
 
@@ -128,8 +124,8 @@
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: Starts after Foundational completion and has no dependency on other user stories.
-- **User Story 2 (P2)**: Starts after Foundational completion and depends on shared layout/content infrastructure, but remains independently testable from solution pages.
-- **User Story 3 (P3)**: Starts after Foundational completion and reuses shared content and contact infrastructure established earlier.
+- **User Story 2 (P2)**: Starts after Foundational completion and depends on shared layout/content infrastructure, but remains independently testable without any additional public routes.
+- **User Story 3 (P3)**: Removed from the current public scope.
 
 ### Within Each User Story
 
@@ -144,7 +140,6 @@
 - T009, T010, T011, and T012 can run in parallel after T007-T008.
 - T021 and T022 can run in parallel as separate content-seeding tasks.
 - T023 can proceed in parallel with content seeding once shared schemas are in place.
-- T027 and T028 can run in parallel within User Story 3.
 - T032, T033, T034, and T036 can run in parallel during the polish phase.
 
 ---
@@ -152,9 +147,9 @@
 ## Parallel Example: User Story 2
 
 ```text
-Task: T021 Seed partner detail content in content/partners/huawei.mdx, content/partners/sunbird-dcim.mdx, and content/partners/vertiv.mdx
-Task: T022 Seed category and offering content in content/categories/aisle-containment.mdx, content/categories/airflow-management.mdx, content/categories/smart-rack.mdx, content/offerings/gem2-generation-modular.mdx, content/offerings/aislelok.mdx, content/offerings/koldlok.mdx, content/offerings/hotlok.mdx, and content/offerings/austin-hughes.mdx
-Task: T023 Implement partner and category card, offering list, and related-content components in components/marketing/partner-card.tsx, components/marketing/category-card.tsx, components/marketing/offering-list.tsx, and components/marketing/related-content.tsx
+Task: T021 Seed vendor detail content in content/vendors/huawei/huawei.mdx, content/vendors/sunbird-dcim/sunbird-dcim.mdx, and content/vendors/vertiv/vertiv.mdx
+Task: T022 Seed category and nested vendor offering content in content/categories/aisle-containment.mdx, content/categories/airflow-management.mdx, content/categories/smart-rack.mdx, and content/vendors/*/solutions/*.mdx
+Task: T023 Implement vendor and category card, offering list, and related-content components in components/marketing/vendor-card.tsx, components/marketing/category-card.tsx, components/marketing/offering-list.tsx, and components/marketing/related-content.tsx
 ```
 
 ---
@@ -173,14 +168,14 @@ Task: T023 Implement partner and category card, offering list, and related-conte
 
 1. Finish Setup and Foundational to establish the content and route platform.
 2. Deliver User Story 1 as the first user-facing increment.
-3. Add User Story 2 for partner and category exploration.
-4. Add User Story 3 for solution conversion and contact flow.
+3. Add User Story 2 for vendor and category exploration.
+4. Keep the current public scope focused on vendors, categories, and contact.
 5. Complete Polish to harden quality, SEO, and authoring workflows.
 
 ### Parallel Team Strategy
 
 1. One developer can own Setup and CI while another prepares content schema scaffolding.
-2. After Foundational is complete, one developer can own home page composition, another can build partner/category routes, and another can build solution/contact flows.
+2. After Foundational is complete, one developer can own home page composition, another can build vendor/category routes, and another can build contact and redirect flows.
 3. Polish work can be split across test automation, SEO artifacts, and documentation.
 
 ---

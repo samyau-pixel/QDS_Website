@@ -28,14 +28,13 @@ Define the collection-level contract for content authored in the Quantum Data Sy
 - Required fields:
   - `hero`
   - `intro`
-  - `featuredPartners`
+  - `featuredVendors`
   - `featuredCategories`
-  - `featuredSolutions`
 - Guarantees:
   - all featured references resolve to published entries
   - at least one CTA is present in the hero block
 
-### `partners`
+### `vendors`
 
 - Cardinality: zero to many
 - Required fields for published entries:
@@ -63,7 +62,7 @@ Define the collection-level contract for content authored in the Quantum Data Sy
   - `id`
   - `name`
   - `summary`
-  - `body` or linked offerings/solutions sufficient for overview rendering
+  - `body` or linked offerings sufficient for overview rendering
   - `status`
 - Optional fields:
   - `offeringIds`
@@ -88,27 +87,6 @@ Define the collection-level contract for content authored in the Quantum Data Sy
   - `assetGallery`
 - Guarantees:
   - every published offering is attached to at least one category
-
-### `solutions`
-
-- Cardinality: zero to many
-- Required fields for published entries:
-  - `id`
-  - `name`
-  - `problemStatement`
-  - `outcomes`
-  - `body`
-  - `primaryCta`
-  - `status`
-- Optional fields:
-  - `targetIndustries`
-  - `relatedPartnerIds`
-  - `relatedCategoryIds`
-  - `relatedOfferingIds`
-  - `seo`
-- Guarantees:
-  - every published solution can render an independent sales-enablement page
-  - all related references resolve during build
 
 ## Shared Rules
 
