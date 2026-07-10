@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/layout/breadcrumbs';
 import RelatedContent from '@/components/marketing/related-content';
 import OfferingList from '@/components/marketing/offering-list';
 import { getCategoryBySlug, getCategorySlugs } from '@/lib/content/categories';
-import { loadContentEntries } from '@/lib/content/fs-content';
+import { loadAllContentEntries, loadContentEntries } from '@/lib/content/fs-content';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
@@ -37,9 +37,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 export default async function CategoryDetailPage({ params }: CategoryPageProps) {
   const { categorySlug } = await params;
   const category = await getCategoryBySlug(categorySlug);
-  const partners = await loadContentEntries('partners');
-  const offerings = await loadContentEntries('offerings');
+  const vendors = await loadContentEntries('vendors');
   const solutions = await loadContentEntries('solutions');
+  const allContent = await loadAllContentEntries();
 
   if (!category) {
     notFound();
@@ -73,25 +73,24 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               <li><strong>Scalability:</strong> Modular designs that grow with your needs</li>
             </ul>
             <OfferingList
-              offerings={category.offeringIds
-                .map((id) => offerings.find((offering) => offering.id === id))
-                .filter((offering): offering is (typeof offerings)[number] => Boolean(offering))
-                .map((offering) => ({
-                  id: offering.slug,
-                  name: offering.name,
-                  summary: offering.summary,
+              offerings={allContent
+                .filter((entry) => entry.status === 'published' && entry.pathSegments[0] === 'vendors' && entry.pathSegments[2] === 'solutions' && entry.categoryIds.includes(category.slug))
+                .map((entry) => ({
+                  id: entry.slug,
+                  name: entry.name,
+                  summary: entry.summary,
                 }))}
             />
             <RelatedContent
-              title="Related Partners"
+              title="Related Vendors"
               items={category.relatedPartnerIds
-                .map((id) => partners.find((partner) => partner.id === id))
-                .filter((partner): partner is (typeof partners)[number] => Boolean(partner))
-                .map((partner) => ({
-                  id: partner.slug,
-                  name: partner.name,
-                  summary: partner.summary,
-                  type: 'partner' as const,
+                .map((id) => vendors.find((vendor) => vendor.id === id && vendor.pathSegments.length === 3 && vendor.pathSegments[2] === `${vendor.slug}.mdx`))
+                .filter((vendor): vendor is (typeof vendors)[number] => Boolean(vendor))
+                .map((vendor) => ({
+                  id: vendor.slug,
+                  name: vendor.name,
+                  summary: vendor.summary,
+                  type: 'vendor' as const,
                 }))}
             />
             <RelatedContent

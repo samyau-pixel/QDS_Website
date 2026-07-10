@@ -4,7 +4,8 @@ import { z } from 'zod';
 // Type exports for content
 export type SiteSettings = z.infer<typeof collections.siteSettings.schema>;
 export type HomePage = z.infer<typeof collections.homePage.schema>;
-export type Partner = z.infer<typeof collections.partners.schema>;
+export type Vendor = z.infer<typeof collections.vendors.schema>;
+export type Partner = Vendor;
 export type Category = z.infer<typeof collections.categories.schema>;
 export type Offering = z.infer<typeof collections.offerings.schema>;
 export type Solution = z.infer<typeof collections.solutions.schema>;

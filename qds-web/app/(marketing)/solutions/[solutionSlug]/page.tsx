@@ -42,9 +42,9 @@ export default async function SolutionDetailPage({ params }: SolutionPageProps) 
     notFound();
   }
 
-  const partners = (await loadContentEntries('partners')).filter((entry) => solution.relatedPartnerIds.includes(entry.id));
+  const vendors = (await loadContentEntries('vendors')).filter((entry) => entry.pathSegments.length === 3 && entry.pathSegments[2] === `${entry.slug}.mdx`);
   const categories = (await loadContentEntries('categories')).filter((entry) => solution.relatedCategoryIds?.includes(entry.id));
-  const offerings = (await loadContentEntries('offerings')).filter((entry) => solution.relatedOfferingIds?.includes(entry.id));
+  const offerings = (await loadContentEntries('vendors')).filter((entry) => entry.pathSegments[0] === 'vendors' && entry.pathSegments[2] === 'solutions' && solution.relatedOfferingIds?.includes(entry.id));
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
@@ -73,13 +73,13 @@ export default async function SolutionDetailPage({ params }: SolutionPageProps) 
                 </ul>
               </Container>
             </section>
-            <RelatedContent
-              title="Related Partners"
-              items={partners.map((entry) => ({
+            <RelatedContent 
+              title="Related Vendors" 
+              items={vendors.filter((entry) => solution.relatedPartnerIds.includes(entry.id)).map((entry) => ({
                 id: entry.slug,
                 name: entry.name,
                 summary: entry.summary,
-                type: 'partner' as const,
+                type: 'vendor' as const,
               }))}
             />
             <RelatedContent

@@ -4,7 +4,7 @@ import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
 import Hero from '@/components/marketing/hero';
 import TrustSignals from '@/components/marketing/trust-signals';
-import PartnerCard from '@/components/marketing/partner-card';
+import VendorCard from '@/components/marketing/vendor-card';
 import CategoryCard from '@/components/marketing/category-card';
 import { trackCTAClick } from '@/lib/analytics/events';
 
@@ -28,8 +28,8 @@ export default function HomePage() {
       style: 'primary',
     },
     secondaryCta: {
-      label: 'View Our Partners',
-      href: '/partners',
+      label: 'View Our Vendors',
+      href: '/vendors',
       style: 'secondary',
     },
   };
@@ -37,11 +37,11 @@ export default function HomePage() {
   const trustSignals = [
     { label: 'Years of Experience', value: '15+' },
     { label: 'Data Centers Optimized', value: '500+' },
-    { label: 'Partner Brands', value: '20+' },
+    { label: 'Vendor Brands', value: '20+' },
     { label: 'Customer Satisfaction', value: '98%' },
   ];
 
-  const featuredPartners = [
+  const featuredVendors = [
     { id: 'huawei', name: 'Huawei', summary: 'Global leader in ICT infrastructure and smart data center solutions.' },
     { id: 'sunbird-dcim', name: 'Sunbird DCIM', summary: 'Leading DCIM software for data center capacity management.' },
     { id: 'vertiv', name: 'Vertiv', summary: 'Global leader in critical infrastructure for data centers.' },
@@ -70,7 +70,7 @@ export default function HomePage() {
               Welcome to Quantum Data Systems
             </h2>
             <p className="text-slate-600 text-center max-w-3xl mx-auto">
-              Quantum Data Systems partners with industry leaders to deliver comprehensive
+              Quantum Data Systems works with industry-leading vendors to deliver comprehensive
               data center infrastructure solutions. Whether you need to improve airflow
               efficiency, maximize space utilization, or modernize your rack infrastructure,
               we have the expertise and products to help.
@@ -79,10 +79,10 @@ export default function HomePage() {
         </Container>
         <section className="py-12">
           <Container>
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Our Partners</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Our Vendors</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredPartners.map((partner) => (
-                <PartnerCard key={partner.id} {...partner} />
+              {featuredVendors.map((vendor) => (
+                <VendorCard key={vendor.id} {...vendor} />
               ))}
             </div>
           </Container>

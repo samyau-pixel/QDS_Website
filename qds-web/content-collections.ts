@@ -160,9 +160,9 @@ export const collections = {
     include: '*.mdx',
     schema: homePageSchema,
   }),
-  partners: defineCollection({
-    name: 'partners',
-    directory: 'partners',
+  vendors: defineCollection({
+    name: 'vendors',
+    directory: 'vendors',
     include: '*.mdx',
     schema: partnerSchema,
   }),

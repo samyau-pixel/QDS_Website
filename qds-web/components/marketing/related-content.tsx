@@ -6,12 +6,12 @@ interface RelatedContentProps {
     id: string;
     name: string;
     summary: string;
-    type: 'partner' | 'category' | 'solution';
+    type: 'vendor' | 'category' | 'solution';
   }>;
 }
 
 const hrefByType: Record<RelatedContentProps['items'][number]['type'], string> = {
-  partner: '/partners',
+  vendor: '/vendors',
   category: '/categories',
   solution: '/solutions',
 };

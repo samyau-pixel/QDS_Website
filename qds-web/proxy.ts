@@ -33,9 +33,13 @@ export function proxy(request: NextRequest) {
   // Legacy redirect handling
   const pathname = request.nextUrl.pathname;
   const legacyPartnerRedirects: Record<string, string> = {
-    '/partner/huawei': '/partners/huawei',
-    '/partner/sunbird': '/partners/sunbird-dcim',
-    '/partner/vertiv': '/partners/vertiv',
+    '/partner/huawei': '/vendors/huawei',
+    '/partner/sunbird': '/vendors/sunbird-dcim',
+    '/partner/vertiv': '/vendors/vertiv',
+    '/partners': '/vendors',
+    '/partners/huawei': '/vendors/huawei',
+    '/partners/sunbird-dcim': '/vendors/sunbird-dcim',
+    '/partners/vertiv': '/vendors/vertiv',
   };
 
   if (legacyPartnerRedirects[pathname]) {

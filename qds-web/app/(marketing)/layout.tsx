@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: '%s | Quantum Data Systems',
     default: 'Quantum Data Systems | Data Center Infrastructure Solutions',
   },
-  description: 'Explore our data center infrastructure solutions, partners, and categories to optimize your facility efficiency.',
+  description: 'Explore our data center infrastructure solutions, vendors, and categories to optimize your facility efficiency.',
 };
 
 export default function MarketingLayout({ children }: MarketingLayoutProps) {

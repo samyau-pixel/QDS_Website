@@ -14,7 +14,7 @@ export default function SiteFooter() {
           <div>
             <h4 className="text-md font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/partners" className="text-slate-400 hover:text-white">Partners</Link></li>
+              <li><Link href="/vendors" className="text-slate-400 hover:text-white">Vendors</Link></li>
               <li><Link href="/categories" className="text-slate-400 hover:text-white">Categories</Link></li>
               <li><Link href="/solutions" className="text-slate-400 hover:text-white">Solutions</Link></li>
             </ul>

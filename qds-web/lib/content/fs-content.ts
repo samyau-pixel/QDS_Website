@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import type { Dirent } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
@@ -9,6 +10,8 @@ export interface FsContentEntry {
   summary: string;
   body: string;
   status: 'draft' | 'published';
+  relativePath: string;
+  pathSegments: string[];
   logo: string | undefined;
   certifications: string[];
   problemStatement: string | undefined;
@@ -21,6 +24,8 @@ export interface FsContentEntry {
     style: 'primary' | 'secondary' | 'text';
     trackingKey: string | undefined;
   } | undefined;
+  categoryIds: string[];
+  vendorIds: string[];
   offeringIds: string[];
   relatedPartnerIds: string[];
   relatedSolutionIds: string[];
@@ -36,26 +41,37 @@ function toArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
 }
 
-export async function loadContentEntries(folderName: string): Promise<FsContentEntry[]> {
-  const folderPath = path.join(process.cwd(), 'content', folderName);
-  const entries = await fs.readdir(folderPath).catch(() => []);
+async function readMdxFiles(basePath: string, relativeRoot = ''): Promise<FsContentEntry[]> {
+  const directoryEntries = await fs.readdir(basePath, { withFileTypes: true }).catch(() => [] as Dirent[]);
 
-  const parsed = await Promise.all(
-    entries
-      .filter((entry) => entry.endsWith('.mdx'))
-      .map(async (fileName) => {
-        const source = await fs.readFile(path.join(folderPath, fileName), 'utf8');
-        const parsedMatter = matter(source);
-        const data = parsedMatter.data as Record<string, unknown>;
-        const slug = typeof data.slug === 'string' ? data.slug : fileName.replace(/\.mdx$/, '');
+  const parsedEntries = await Promise.all(
+    directoryEntries.map(async (directoryEntry) => {
+      const entryPath = path.join(basePath, directoryEntry.name);
+      const relativePath = relativeRoot ? path.join(relativeRoot, directoryEntry.name) : directoryEntry.name;
 
-        return {
+      if (directoryEntry.isDirectory()) {
+        return readMdxFiles(entryPath, relativePath);
+      }
+
+      if (!directoryEntry.name.endsWith('.mdx')) {
+        return [] as FsContentEntry[];
+      }
+
+      const source = await fs.readFile(entryPath, 'utf8');
+      const parsedMatter = matter(source);
+      const data = parsedMatter.data as Record<string, unknown>;
+      const slug = typeof data.slug === 'string' ? data.slug : directoryEntry.name.replace(/\.mdx$/, '');
+
+      return [
+        {
           id: typeof data.id === 'string' ? data.id : slug,
           slug,
           name: typeof data.name === 'string' ? data.name : slug,
           summary: typeof data.summary === 'string' ? data.summary : '',
           body: parsedMatter.content.trim(),
           status: (data.status === 'published' ? 'published' : 'draft') as 'draft' | 'published',
+          relativePath,
+          pathSegments: relativePath.split(path.sep).filter(Boolean),
           logo: typeof data.logo === 'string' ? data.logo : undefined,
           certifications: toArray(data.certifications),
           problemStatement: typeof data.problemStatement === 'string' ? data.problemStatement : undefined,
@@ -72,6 +88,8 @@ export async function loadContentEntries(folderName: string): Promise<FsContentE
                 trackingKey: typeof (data.primaryCta as Record<string, unknown>).trackingKey === 'string' ? (data.primaryCta as Record<string, unknown>).trackingKey as string : undefined,
               }
             : undefined,
+          categoryIds: toArray(data.categoryIds),
+          vendorIds: toArray(data.vendorIds).length ? toArray(data.vendorIds) : toArray(data.partnerIds),
           offeringIds: toArray(data.offeringIds),
           relatedPartnerIds: toArray(data.relatedPartnerIds),
           relatedSolutionIds: toArray(data.relatedSolutionIds),
@@ -83,9 +101,19 @@ export async function loadContentEntries(folderName: string): Promise<FsContentE
                 description: typeof (data.seo as Record<string, unknown>).description === 'string' ? (data.seo as Record<string, unknown>).description as string : undefined,
               }
             : undefined,
-        };
-      })
+        },
+      ];
+    })
   );
 
-  return parsed;
+  return parsedEntries.flat();
+}
+
+export async function loadContentEntries(folderName: string): Promise<FsContentEntry[]> {
+  const folderPath = path.join(process.cwd(), 'content', folderName);
+  return readMdxFiles(folderPath);
+}
+
+export async function loadAllContentEntries(): Promise<FsContentEntry[]> {
+  return readMdxFiles(path.join(process.cwd(), 'content'));
 }
