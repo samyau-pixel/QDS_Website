@@ -14,7 +14,7 @@ Build a fast, SEO-optimized B2B marketing website for Quantum Data Systems using
 
 **Language/Version**: TypeScript 5.x on Node.js 20 LTS
 
-**Primary Dependencies**: Next.js 15 App Router, React 19, Tailwind CSS 4.x, `@next/mdx`, remark/rehype plugins, Content Collections, Zod, Vercel Analytics, Playwright, Vitest, `@axe-core/playwright`, Lighthouse CI
+**Primary Dependencies**: Next.js 16 App Router, React 19, Tailwind CSS 4.x, `@next/mdx`, remark/rehype plugins, Content Collections, Zod, Vercel Analytics, Playwright, Vitest, `@axe-core/playwright`, Lighthouse CI
 
 **Storage**: Repository-managed MDX and collection metadata for primary content; optional webhook/CRM destination for contact submissions; Vercel cache for static assets and ISR artifacts
 
@@ -26,7 +26,7 @@ Build a fast, SEO-optimized B2B marketing website for Quantum Data Systems using
 
 **Performance Goals**: LCP under 2.0s p75 on mid-tier mobile over 4G, CLS under 0.05, INP under 200ms, TTFB under 200ms for cached static routes, Lighthouse 90+ Performance and 95+ Accessibility/SEO on key templates
 
-**Constraints**: Canonical content must stay SEO-stable, Edge runtime cannot host ISR routes, content edits in repository require deploy publish, initial route JS under 100KB gzipped for home and under 130KB for detail pages, WCAG 2.1 AA for core journeys
+**Constraints**: Canonical content must stay SEO-stable, Edge runtime cannot host ISR routes, content edits in repository require deploy publish, initial route JS under 100KB gzipped for home and under 130KB for detail pages, WCAG 2.1 AA for core journeys, request-time personalization and legacy redirects are handled through `proxy.ts` rather than `middleware.ts`
 
 **Scale/Scope**: Initial release covers home, partner index/detail, category index/detail, solution index/detail, contact path, shared layout and content model templates, and extensible collections for dozens of partners/categories/solutions
 
@@ -97,7 +97,7 @@ lib/
 ├── analytics/
 └── validation/
 
-middleware.ts
+proxy.ts
 mdx-components.tsx
 
 tests/

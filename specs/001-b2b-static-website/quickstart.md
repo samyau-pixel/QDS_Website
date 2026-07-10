@@ -21,6 +21,8 @@ npm install @vercel/analytics
 npm install -D vitest @vitest/ui playwright @axe-core/playwright lighthouse-ci
 ```
 
+If you are working from the workspace root (`C:\Users\Sam\QDS_web`), run `npm run dev` there and it will forward to the app in `qds-web/`.
+
 ## Initial Project Layout
 
 ```text
@@ -30,7 +32,7 @@ content/
 lib/
 tests/
 mdx-components.tsx
-middleware.ts
+proxy.ts
 content-collections.ts
 ```
 
@@ -46,7 +48,7 @@ content-collections.ts
 1. Implement static route generation for partner, category, and solution detail pages with `generateStaticParams()`.
 2. Keep canonical content pages statically rendered.
 3. Reserve ISR for derived or externally mutable data only.
-4. Use Edge middleware for regional CTA or campaign-level personalization without changing canonical body content.
+4. Use `proxy.ts` for regional CTA or campaign-level personalization without changing canonical body content.
 
 ## SEO Setup
 
@@ -76,4 +78,4 @@ npx lhci autorun
 1. Deploy previews on every pull request.
 2. Run performance, accessibility, and route-integrity checks against preview deployments.
 3. Publish content changes through repository commits and Vercel deployments.
-4. Keep Node runtime handlers isolated from Edge middleware and static routes.
+4. Keep Node runtime handlers isolated from `proxy.ts` logic and static routes.

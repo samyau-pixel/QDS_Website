@@ -38,7 +38,7 @@
 - [X] T009 [P] Implement the shared MDX component allowlist in mdx-components.tsx and components/mdx/index.tsx
 - [X] T010 [P] Build the site shell, navigation, footer, and layout primitives in components/layout/site-header.tsx, components/layout/site-footer.tsx, components/layout/container.tsx, and app/(marketing)/layout.tsx
 - [X] T011 [P] Implement shared metadata and structured-data helpers in lib/seo/metadata.ts and lib/seo/structured-data.ts
-- [X] T012 [P] Implement Edge personalization and redirect middleware in middleware.ts and lib/analytics/personalization.ts
+- [X] T012 [P] Implement Edge personalization and redirect proxy logic in proxy.ts and lib/analytics/personalization.ts
 - [X] T013 Implement the contact validation model and Node runtime handler scaffold in lib/validation/contact-form.ts and app/api/contact/route.ts
 - [X] T014 Seed global site settings and reusable call-to-action content in content/site/site-settings.mdx and content/shared/call-to-actions.mdx
 - [X] T015 Configure CI quality gates for lint, tests, accessibility, and performance checks in .github/workflows/ci.yml
@@ -76,9 +76,9 @@
 - [X] T021 [P] [US2] Seed partner detail content in content/partners/huawei.mdx, content/partners/sunbird-dcim.mdx, and content/partners/vertiv.mdx
 - [X] T022 [P] [US2] Seed category and offering content in content/categories/aisle-containment.mdx, content/categories/airflow-management.mdx, content/categories/smart-rack.mdx, content/offerings/gem2-generation-modular.mdx, content/offerings/aislelok.mdx, content/offerings/koldlok.mdx, content/offerings/hotlok.mdx, and content/offerings/austin-hughes.mdx
 - [X] T023 [P] [US2] Implement partner and category card, offering list, and related-content components in components/marketing/partner-card.tsx, components/marketing/category-card.tsx, components/marketing/offering-list.tsx, and components/marketing/related-content.tsx
-- [X] T024 [US2] Implement the partners index and partner detail routes in app/(marketing)/partners/page.tsx and app/(marketing)/partners/[partnerSlug]/page.tsx
-- [X] T025 [US2] Implement the categories index and category detail routes in app/(marketing)/categories/page.tsx and app/(marketing)/categories/[categorySlug]/page.tsx
-- [X] T026 [US2] Add breadcrumbs, canonical metadata, and legacy redirect handling for partner and category pages in components/layout/breadcrumbs.tsx, lib/seo/metadata.ts, and middleware.ts
+- [X] T024 [US2] Implement the partners index and partner detail routes with filesystem-backed MDX content in app/(marketing)/partners/page.tsx and app/(marketing)/partners/[partnerSlug]/page.tsx
+- [X] T025 [US2] Implement the categories index and category detail routes with filesystem-backed MDX content in app/(marketing)/categories/page.tsx and app/(marketing)/categories/[categorySlug]/page.tsx
+- [X] T026 [US2] Add breadcrumbs, canonical metadata, and legacy redirect handling for partner and category pages in components/layout/breadcrumbs.tsx, lib/seo/metadata.ts, and proxy.ts
 
 **Checkpoint**: User Stories 1 and 2 both work independently, with partner and category discovery fully navigable.
 
@@ -94,7 +94,7 @@
 
 - [X] T027 [P] [US3] Seed solution content and cross-links in content/solutions/data-center-airflow-optimization.mdx and content/solutions/modular-rack-modernization.mdx
 - [X] T028 [P] [US3] Implement solution-hero, solution-outcomes, and contact-form components in components/marketing/solution-hero.tsx, components/marketing/solution-outcomes.tsx, and components/forms/contact-form.tsx
-- [X] T029 [US3] Implement the solutions index and solution detail routes in app/(marketing)/solutions/page.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
+- [X] T029 [US3] Implement the solutions index and solution detail routes with filesystem-backed MDX content in app/(marketing)/solutions/page.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
 - [X] T030 [US3] Implement the contact page and inquiry submission flow in app/(marketing)/contact/page.tsx and app/api/contact/route.ts
 - [X] T031 [US3] Connect related partner, category, and solution navigation plus primary CTAs on solution pages in components/marketing/related-content.tsx and app/(marketing)/solutions/[solutionSlug]/page.tsx
 
@@ -112,6 +112,7 @@
 - [ ] T035 Optimize accessibility, performance, and responsive behavior across core templates in app/(marketing)/page.tsx, app/(marketing)/partners/[partnerSlug]/page.tsx, app/(marketing)/categories/[categorySlug]/page.tsx, and app/(marketing)/solutions/[solutionSlug]/page.tsx
 - [ ] T036 [P] Document content authoring, publishing, and validation workflow in README.md and specs/001-b2b-static-website/quickstart.md
 - [ ] T037 Run the full quickstart validation and CI baseline updates in specs/001-b2b-static-website/quickstart.md and .github/workflows/ci.yml
+- [X] T038 Refactor partner and solution listing and detail routes to generate from MDX files using the shared filesystem content loader in app/(marketing)/partners/page.tsx, app/(marketing)/partners/[partnerSlug]/page.tsx, app/(marketing)/solutions/page.tsx, app/(marketing)/solutions/[solutionSlug]/page.tsx, and lib/content/fs-content.ts
 
 ---
 
