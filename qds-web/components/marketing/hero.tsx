@@ -6,8 +6,8 @@ export default function Hero({
 }: {
   headline: string;
   subheadline: string;
-  primaryCta: { label: string; href: string; style: string };
-  secondaryCta?: { label: string; href: string; style: string };
+  primaryCta: { label: string; href: string; style: string; onClick?: () => void };
+  secondaryCta?: { label: string; href: string; style: string; onClick?: () => void };
 }) {
   return (
     <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
@@ -17,6 +17,7 @@ export default function Hero({
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href={primaryCta.href}
+            onClick={primaryCta.onClick}
             className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
           >
             {primaryCta.label}
@@ -24,6 +25,7 @@ export default function Hero({
           {secondaryCta && (
             <a
               href={secondaryCta.href}
+              onClick={secondaryCta.onClick}
               className="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
             >
               {secondaryCta.label}

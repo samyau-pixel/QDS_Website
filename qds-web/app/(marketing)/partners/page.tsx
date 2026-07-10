@@ -3,19 +3,16 @@ import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
 import Link from 'next/link';
+import { loadContentEntries } from '@/lib/content/fs-content';
 
 export const metadata: Metadata = {
   title: 'Partners | Quantum Data Systems',
   description: 'Explore our partner network of industry-leading data center infrastructure providers.',
 };
 
-const partners = [
-  { id: 'huawei', name: 'Huawei', summary: 'Global leader in ICT infrastructure and smart data center solutions.' },
-  { id: 'sunbird-dcim', name: 'Sunbird DCIM', summary: 'Leading DCIM software for data center capacity management.' },
-  { id: 'vertiv', name: 'Vertiv', summary: 'Global leader in critical infrastructure for data centers.' },
-];
+export default async function PartnersPage() {
+  const partners = (await loadContentEntries('partners')).filter((partner) => partner.status === 'published');
 
-export default function PartnersPage() {
   return (
     <>
       <SiteHeader />
@@ -33,8 +30,8 @@ export default function PartnersPage() {
           <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {partners.map((partner) => (
               <Link
-                key={partner.id}
-                href={`/partners/${partner.id}`}
+                key={partner.slug}
+                href={`/partners/${partner.slug}`}
                 className="block p-6 bg-white border border-slate-200 rounded-lg hover:shadow-lg transition-shadow"
               >
                 <h2 className="text-xl font-semibold text-slate-900 mb-2">{partner.name}</h2>

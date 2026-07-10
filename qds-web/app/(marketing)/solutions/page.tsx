@@ -3,26 +3,16 @@ import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
 import Link from 'next/link';
+import { loadContentEntries } from '@/lib/content/fs-content';
 
 export const metadata: Metadata = {
   title: 'Solutions | Quantum Data Systems',
   description: 'Discover data center infrastructure solutions tailored to your business needs.',
 };
 
-const solutions = [
-  { 
-    id: 'data-center-airflow-optimization', 
-    name: 'Data Center Airflow Optimization', 
-    summary: 'Transform your cooling efficiency with comprehensive airflow management.' 
-  },
-  { 
-    id: 'modular-rack-modernization', 
-    name: 'Modular Rack Modernization', 
-    summary: 'Modernize legacy infrastructure with intelligent monitoring and management.' 
-  },
-];
+export default async function SolutionsPage() {
+  const solutions = (await loadContentEntries('solutions')).filter((solution) => solution.status === 'published');
 
-export default function SolutionsPage() {
   return (
     <>
       <SiteHeader />
@@ -40,8 +30,8 @@ export default function SolutionsPage() {
           <div className="py-12 grid grid-cols-1 md:grid-cols-2 gap-6">
             {solutions.map((solution) => (
               <Link
-                key={solution.id}
-                href={`/solutions/${solution.id}`}
+                key={solution.slug}
+                href={`/solutions/${solution.slug}`}
                 className="block p-6 bg-white border border-slate-200 rounded-lg hover:shadow-lg transition-shadow"
               >
                 <h2 className="text-xl font-semibold text-slate-900 mb-2">{solution.name}</h2>

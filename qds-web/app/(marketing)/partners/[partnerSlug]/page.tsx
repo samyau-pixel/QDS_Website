@@ -1,56 +1,54 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
 import Breadcrumbs from '@/components/layout/breadcrumbs';
 import RelatedContent from '@/components/marketing/related-content';
+import { loadContentEntries } from '@/lib/content/fs-content';
 
-export const metadata: Metadata = {
-  title: 'Huawei | Quantum Data Systems',
-  description: 'Huawei provides cutting-edge ICT infrastructure and smart data center solutions.',
-};
+interface PartnerPageProps {
+  params: Promise<{ partnerSlug: string }>;
+}
 
-export default function PartnerDetailPage({ params }: { params: { partnerSlug: string } }) {
-  const partnerId = params.partnerSlug;
-  
-  // In real implementation, fetch partner data from content collections
-  const partner = {
-    name: partnerId === 'huawei' ? 'Huawei' : partnerId === 'sunbird-dcim' ? 'Sunbird DCIM' : 'Vertiv',
-    summary: partnerId === 'huawei' ? 'Global leader in ICT infrastructure and smart data center solutions.' : 
-             partnerId === 'sunbird-dcim' ? 'Leading DCIM software for data center capacity management.' :
-             'Global leader in critical infrastructure for data centers.',
-    content: partnerId === 'huawei' ? `Huawei is a global leader in ICT infrastructure, offering comprehensive smart
-              data center solutions that help organizations achieve higher efficiency,
-              reliability, and sustainability.` :
-             partnerId === 'sunbird-dcim' ? `Sunbird DCIM is a leading provider of Data Center Infrastructure Management
-              (DCIM) software, helping organizations optimize capacity, improve efficiency,
-              and reduce downtime.` :
-             `Vertiv is a global leader in critical infrastructure for data centers,
-              communication networks, and commercial and industrial facilities.`,
-    offerings: partnerId === 'huawei' ? [
-      { id: 'fusionmodule', name: 'FusionModule', summary: 'Prefabricated modular data center solutions' },
-      { id: 'smartli', name: 'SmartLi', summary: 'Smart lithium battery UPS systems' }
-    ] : partnerId === 'sunbird-dcim' ? [
-      { id: 'dcpowerdc', name: 'dCPowerDC', summary: 'Power management and capacity planning' },
-      { id: 'imonium', name: 'iMonium', summary: 'Real-time monitoring and alerting' }
-    ] : [
-      { id: 'liebert-crac', name: 'Liebert CRAC', summary: 'Precision cooling systems' },
-      { id: 'smartslot', name: 'SmartSlot', summary: 'Modular UPS systems' }
-    ],
-    relatedCategories: [
-      { id: 'smart-rack', name: 'Smart Rack', summary: 'Intelligent rack solutions with integrated monitoring.', type: 'category' },
-      { id: 'airflow-management', name: 'Airflow Management', summary: 'Precision airflow solutions to eliminate hot spots.', type: 'category' }
-    ],
-    relatedSolutions: [
-      { id: 'data-center-airflow-optimization', name: 'Data Center Airflow Optimization', summary: 'Transform your cooling efficiency with comprehensive airflow management.', type: 'solution' }
-    ]
+export async function generateStaticParams() {
+  const partners = (await loadContentEntries('partners')).filter((partner) => partner.status === 'published');
+  return partners.map((partner) => ({ partnerSlug: partner.slug }));
+}
+
+export async function generateMetadata({ params }: PartnerPageProps): Promise<Metadata> {
+  const { partnerSlug } = await params;
+  const partner = (await loadContentEntries('partners')).find((entry) => entry.slug === partnerSlug && entry.status === 'published');
+
+  if (!partner) {
+    return { title: 'Partner Not Found | Quantum Data Systems' };
+  }
+
+  return {
+    title: partner.seo?.title || `${partner.name} | Quantum Data Systems`,
+    description: partner.seo?.description || partner.summary,
   };
+}
+
+export default async function PartnerDetailPage({ params }: PartnerPageProps) {
+  const { partnerSlug } = await params;
+  const partners = (await loadContentEntries('partners')).filter((entry) => entry.status === 'published');
+  const partner = partners.find((entry) => entry.slug === partnerSlug);
+
+  if (!partner) {
+    notFound();
+  }
+
+  const offerings = (await loadContentEntries('offerings')).filter((entry) => partner.relatedOfferingIds?.includes(entry.id));
+  const categories = (await loadContentEntries('categories')).filter((entry) => partner.relatedCategoryIds?.includes(entry.id));
+  const solutions = (await loadContentEntries('solutions')).filter((entry) => partner.relatedSolutionIds.includes(entry.id));
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
     { label: 'Partners', href: '/partners' },
-    { label: partner.name }
+    { label: partner.name },
   ];
+
   return (
     <>
       <SiteHeader />
@@ -60,22 +58,50 @@ export default function PartnerDetailPage({ params }: { params: { partnerSlug: s
           <section className="py-12">
             <h1 className="text-4xl font-bold text-slate-900 mb-4">{partner.name}</h1>
             <p className="text-slate-600 mb-8">{partner.summary}</p>
-            <p className="text-slate-600 mb-8">{partner.content}</p>
-            <h2 className="text-2xl font-semibold text-slate-800 mb-4">Key Offerings</h2>
-            <ul className="list-disc list-inside text-slate-600 space-y-2 mb-8">
-              {partner.offerings.map((offering) => (
-                <li key={offering.id}>
-                  <strong>{offering.name}:</strong> {offering.summary}
-                </li>
+            <div className="prose prose-slate max-w-none text-slate-600 mb-8">
+              {partner.body.split('\n\n').map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
               ))}
-            </ul>
-            <RelatedContent 
-              title="Related Categories" 
-              items={partner.relatedCategories} 
+            </div>
+            {partner.certifications?.length ? (
+              <>
+                <h2 className="text-2xl font-semibold text-slate-800 mb-4">Certifications</h2>
+                <ul className="list-disc list-inside text-slate-600 space-y-2 mb-8">
+                  {partner.certifications.map((certification) => (
+                    <li key={certification}>{certification}</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+            {offerings.length ? (
+              <>
+                <h2 className="text-2xl font-semibold text-slate-800 mb-4">Key Offerings</h2>
+                <ul className="list-disc list-inside text-slate-600 space-y-2 mb-8">
+                  {offerings.map((offering) => (
+                    <li key={offering.id}>
+                      <strong>{offering.name}:</strong> {offering.summary}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+            <RelatedContent
+              title="Related Categories"
+              items={categories.map((entry) => ({
+                id: entry.slug,
+                name: entry.name,
+                summary: entry.summary,
+                type: 'category' as const,
+              }))}
             />
-            <RelatedContent 
-              title="Related Solutions" 
-              items={partner.relatedSolutions} 
+            <RelatedContent
+              title="Related Solutions"
+              items={solutions.map((entry) => ({
+                id: entry.slug,
+                name: entry.name,
+                summary: entry.summary,
+                type: 'solution' as const,
+              }))}
             />
           </section>
         </Container>

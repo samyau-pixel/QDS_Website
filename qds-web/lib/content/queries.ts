@@ -1,4 +1,4 @@
-import { collections } from '../content-collections';
+import { collections } from '../../content-collections';
 import { z } from 'zod';
 
 // Type exports for content
@@ -25,7 +25,7 @@ export function getPublished<T extends { status: 'draft' | 'published' }>(
 }
 
 // Validate that all referenced IDs exist and are published
-export function validateReferences<T extends { status?: 'draft' | 'published' }>(
+export function validateReferences<T extends { id: string; status?: 'draft' | 'published' }>(
   entries: T[],
   references: string[],
   collectionName: string

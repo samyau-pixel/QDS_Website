@@ -10,6 +10,12 @@ interface RelatedContentProps {
   }>;
 }
 
+const hrefByType: Record<RelatedContentProps['items'][number]['type'], string> = {
+  partner: '/partners',
+  category: '/categories',
+  solution: '/solutions',
+};
+
 export default function RelatedContent({ title, items }: RelatedContentProps) {
   if (items.length === 0) return null;
 
@@ -18,7 +24,7 @@ export default function RelatedContent({ title, items }: RelatedContentProps) {
       <h3 className="text-xl font-semibold text-slate-900 mb-6">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {items.map((item) => {
-          const href = `/${item.type}/${item.id}`;
+          const href = `${hrefByType[item.type]}/${item.id}`;
           return (
             <Link
               key={item.id}

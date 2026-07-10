@@ -3,19 +3,16 @@ import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
 import Link from 'next/link';
+import { getPublishedCategories } from '@/lib/content/categories';
 
 export const metadata: Metadata = {
   title: 'Categories | Quantum Data Systems',
   description: 'Explore our data center infrastructure solution categories.',
 };
 
-const categories = [
-  { id: 'aisle-containment', name: 'Aisle Containment', summary: 'Optimize cooling efficiency with professional containment solutions.' },
-  { id: 'airflow-management', name: 'Airflow Management', summary: 'Precision airflow solutions to eliminate hot spots.' },
-  { id: 'smart-rack', name: 'Smart Rack', summary: 'Intelligent rack solutions with integrated monitoring.' },
-];
+export default async function CategoriesPage() {
+  const categories = await getPublishedCategories();
 
-export default function CategoriesPage() {
   return (
     <>
       <SiteHeader />
@@ -33,8 +30,8 @@ export default function CategoriesPage() {
           <div className="py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {categories.map((category) => (
               <Link
-                key={category.id}
-                href={`/categories/${category.id}`}
+                key={category.slug}
+                href={`/categories/${category.slug}`}
                 className="block p-6 bg-white border border-slate-200 rounded-lg hover:shadow-lg transition-shadow"
               >
                 <h2 className="text-xl font-semibold text-slate-900 mb-2">{category.name}</h2>

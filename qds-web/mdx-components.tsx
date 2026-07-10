@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types';
+import type { ReactNode } from 'react';
 
 // Constrained component allowlist for MDX content
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -17,34 +18,34 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     a: ({ href, children }) => <a href={href} className="text-blue-600 hover:text-blue-800 underline">{children}</a>,
     
     // Custom marketing components
-    CtaCard: ({ variant = 'primary', children }) => (
+    CtaCard: ({ variant = 'primary', children }: { variant?: 'primary' | 'secondary'; children: ReactNode }) => (
       <div className={`p-6 rounded-lg ${variant === 'primary' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-900'} mb-6`}>
         {children}
       </div>
     ),
-    StatBand: ({ label, value }) => (
+    StatBand: ({ label, value }: { label: string; value: string }) => (
       <div className="text-center p-4 bg-slate-50 rounded-lg">
         <div className="text-3xl font-bold text-blue-600">{value}</div>
         <div className="text-sm text-slate-600">{label}</div>
       </div>
     ),
-    ComparisonTable: ({ headers, rows }) => (
+    ComparisonTable: ({ headers, rows }: { headers: string[]; rows: string[][] }) => (
       <table className="w-full border-collapse mb-6">
         <thead>
           <tr className="bg-slate-100">
-            {headers.map((h, i) => <th key={i} className="border p-2 text-left">{h}</th>)}
+            {headers.map((h: string, i: number) => <th key={i} className="border p-2 text-left">{h}</th>)}
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => (
+          {rows.map((row: string[], i: number) => (
             <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-              {row.map((cell, j) => <td key={j} className="border p-2">{cell}</td>)}
+              {row.map((cell: string, j: number) => <td key={j} className="border p-2">{cell}</td>)}
             </tr>
           ))}
         </tbody>
       </table>
     ),
-    Testimonial: ({ quote, author, company }) => (
+    Testimonial: ({ quote, author, company }: { quote: string; author: string; company: string }) => (
       <figure className="bg-slate-50 p-6 rounded-lg mb-6">
         <blockquote className="text-lg italic text-slate-700 mb-4">"{quote}"</blockquote>
         <figcaption className="text-sm text-slate-600">
@@ -52,7 +53,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         </figcaption>
       </figure>
     ),
-    FeatureList: ({ items }) => (
+    FeatureList: ({ items }: { items: string[] }) => (
       <ul className="space-y-3 mb-6">
         {items.map((item, i) => (
           <li key={i} className="flex items-start">

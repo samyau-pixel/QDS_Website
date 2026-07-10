@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
@@ -6,73 +7,61 @@ import Breadcrumbs from '@/components/layout/breadcrumbs';
 import SolutionHero from '@/components/marketing/solution-hero';
 import SolutionOutcomes from '@/components/marketing/solution-outcomes';
 import RelatedContent from '@/components/marketing/related-content';
+import OfferingList from '@/components/marketing/offering-list';
+import { loadContentEntries } from '@/lib/content/fs-content';
 
-export const metadata: Metadata = {
-  title: 'Data Center Airflow Optimization | Quantum Data Systems',
-  description: 'Transform your data center cooling efficiency with our comprehensive airflow optimization solutions.',
-};
+interface SolutionPageProps {
+  params: Promise<{ solutionSlug: string }>;
+}
 
-export default function SolutionDetailPage({ params }: { params: { solutionSlug: string } }) {
-  const solutionId = params.solutionSlug;
-  
-  // In real implementation, fetch solution data from content collections
-  const solution = {
-    name: solutionId === 'data-center-airflow-optimization' ? 'Data Center Airflow Optimization' : 'Modular Rack Modernization',
-    problemStatement: solutionId === 'data-center-airflow-optimization' 
-      ? 'Many data centers struggle with inefficient cooling, hot spots, and rising energy costs due to poor airflow management.'
-      : 'Legacy rack infrastructure often lacks the monitoring, power management, and scalability needed for modern data center operations.',
-    content: solutionId === 'data-center-airflow-optimization'
-      ? `Our comprehensive airflow optimization solutions combine aisle containment,
-              precision airflow management, and intelligent monitoring to transform how
-              your data center handles cooling. By separating hot and cold air streams
-              and directing cooling precisely where it's needed, we help you achieve
-              significant energy savings while improving reliability.`
-      : `Our modular rack modernization solutions transform legacy infrastructure
-              into intelligent, manageable assets. By integrating smart monitoring,
-              power management, and access control, we help you achieve better
-              operational efficiency and reduce unplanned downtime.`,
-    outcomes: solutionId === 'data-center-airflow-optimization'
-      ? [
-          'Up to 40% reduction in cooling energy costs',
-          'Elimination of hot spots and thermal hot zones',
-          'Improved equipment reliability and lifespan',
-          'Better PUE (Power Usage Effectiveness) scores'
-        ]
-      : [
-          'Real-time visibility into rack-level operations',
-          'Improved power efficiency and capacity planning',
-          'Enhanced security with integrated access control',
-          'Scalable infrastructure that grows with your needs'
-        ],
-    relatedPartners: [
-      { id: 'vertiv', name: 'Vertiv', summary: 'Global leader in critical infrastructure for data centers.', type: 'partner' },
-      { id: 'huawei', name: 'Huawei', summary: 'Global leader in ICT infrastructure and smart data center solutions.', type: 'partner' }
-    ],
-    relatedCategories: [
-      { id: 'aisle-containment', name: 'Aisle Containment', summary: 'Optimize cooling efficiency with professional containment solutions.', type: 'category' },
-      { id: 'airflow-management', name: 'Airflow Management', summary: 'Precision airflow solutions to eliminate hot spots.', type: 'category' }
-    ],
-    relatedOfferings: [
-      { id: 'koldlok', name: 'KoldLok', summary: 'Advanced cold aisle containment solution', type: 'offering' },
-      { id: 'hotlok', name: 'HotLok', summary: 'Hot aisle containment system', type: 'offering' }
-    ]
+export async function generateStaticParams() {
+  const solutions = (await loadContentEntries('solutions')).filter((solution) => solution.status === 'published');
+  return solutions.map((solution) => ({ solutionSlug: solution.slug }));
+}
+
+export async function generateMetadata({ params }: SolutionPageProps): Promise<Metadata> {
+  const { solutionSlug } = await params;
+  const solution = (await loadContentEntries('solutions')).find((entry) => entry.slug === solutionSlug && entry.status === 'published');
+
+  if (!solution) {
+    return { title: 'Solution Not Found | Quantum Data Systems' };
+  }
+
+  return {
+    title: solution.seo?.title || `${solution.name} | Quantum Data Systems`,
+    description: solution.seo?.description || solution.summary,
   };
+}
+
+export default async function SolutionDetailPage({ params }: SolutionPageProps) {
+  const { solutionSlug } = await params;
+  const solutions = (await loadContentEntries('solutions')).filter((entry) => entry.status === 'published');
+  const solution = solutions.find((entry) => entry.slug === solutionSlug);
+
+  if (!solution) {
+    notFound();
+  }
+
+  const partners = (await loadContentEntries('partners')).filter((entry) => solution.relatedPartnerIds.includes(entry.id));
+  const categories = (await loadContentEntries('categories')).filter((entry) => solution.relatedCategoryIds?.includes(entry.id));
+  const offerings = (await loadContentEntries('offerings')).filter((entry) => solution.relatedOfferingIds?.includes(entry.id));
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
     { label: 'Solutions', href: '/solutions' },
-    { label: solution.name }
+    { label: solution.name },
   ];
+
   return (
     <>
       <SiteHeader />
       <main>
-        <SolutionHero title={solution.name} problemStatement={solution.problemStatement} />
+        <SolutionHero title={solution.name} problemStatement={solution.problemStatement || solution.summary} />
         <Container>
           <Breadcrumbs items={breadcrumbs} />
           <section className="py-12">
-            <p className="text-slate-600 mb-8 text-lg">{solution.content}</p>
-            <SolutionOutcomes outcomes={solution.outcomes} />
+            <p className="text-slate-600 mb-8 text-lg">{solution.body}</p>
+            {solution.outcomes?.length ? <SolutionOutcomes outcomes={solution.outcomes} /> : null}
             <section className="py-12">
               <Container>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-6">How It Works</h2>
@@ -84,25 +73,39 @@ export default function SolutionDetailPage({ params }: { params: { solutionSlug:
                 </ul>
               </Container>
             </section>
-            <RelatedContent 
-              title="Related Partners" 
-              items={solution.relatedPartners} 
+            <RelatedContent
+              title="Related Partners"
+              items={partners.map((entry) => ({
+                id: entry.slug,
+                name: entry.name,
+                summary: entry.summary,
+                type: 'partner' as const,
+              }))}
             />
-            <RelatedContent 
-              title="Related Categories" 
-              items={solution.relatedCategories} 
+            <RelatedContent
+              title="Related Categories"
+              items={categories.map((entry) => ({
+                id: entry.slug,
+                name: entry.name,
+                summary: entry.summary,
+                type: 'category' as const,
+              }))}
             />
-            <RelatedContent 
-              title="Related Offerings" 
-              items={solution.relatedOfferings} 
+            <OfferingList
+              offerings={offerings.map((entry) => ({
+                id: entry.slug,
+                name: entry.name,
+                summary: entry.summary,
+              }))}
             />
             <section className="py-12 bg-blue-600 text-white text-center">
               <Container>
                 <h2 className="text-2xl font-bold mb-4">Ready to Optimize Your Data Center?</h2>
-                <a 
-                  href="/contact?inquiryType=sales" 
-                  className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-                  Get a Free Assessment
+                <a
+                  href={solution.primaryCta?.href || '/contact?inquiryType=sales'}
+                  className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                >
+                  {solution.primaryCta?.label || 'Get a Free Assessment'}
                 </a>
               </Container>
             </section>

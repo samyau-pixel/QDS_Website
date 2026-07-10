@@ -1,2 +1,13 @@
+This notification is for developer, not for AI.
+
 The constitution is using gpt 5.4 mini
 The spec, plan and task is using gpt 5.4
+
+
+Problem and solution prompt:
+
+Q: The categories didn't refresh new content when I update the content file
+
+S: Implemented the category refactor so new MDX files drive the site instead of hardcoded category arrays. The category index now reads published files from lib/content/categories.ts, and the detail route at app/(marketing)/categories/[categorySlug]/page.tsx now uses generateStaticParams() plus getCategoryBySlug() so every published category file gets its own page.
+
+I also fixed the supporting pieces that were blocking the build: related-content links now point to the correct plural routes in components/marketing/related-content.tsx, the hero CTA typing is aligned in components/marketing/hero.tsx, the content-collections config now matches the installed package API in content-collections.ts, and the MDX/Vitest typing issues were cleaned up. npm run build now passes successfully, and the new category slug from content/categories/aisle-containment-2.mdx is being generated at /categories/aisle-containment2.

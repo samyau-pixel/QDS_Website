@@ -1,4 +1,4 @@
-import { defineCollection, defineSchema } from '@content-collections/core';
+import { defineCollection } from '@content-collections/core';
 import { z } from 'zod';
 
 // Shared CTA schema
@@ -151,38 +151,44 @@ export const collections = {
   siteSettings: defineCollection({
     name: 'siteSettings',
     directory: 'site',
+    include: '*.mdx',
     schema: siteSettingsSchema,
   }),
   homePage: defineCollection({
     name: 'homePage',
     directory: 'site',
+    include: '*.mdx',
     schema: homePageSchema,
   }),
   partners: defineCollection({
     name: 'partners',
     directory: 'partners',
+    include: '*.mdx',
     schema: partnerSchema,
   }),
   categories: defineCollection({
     name: 'categories',
     directory: 'categories',
+    include: '*.mdx',
     schema: categorySchema,
   }),
   offerings: defineCollection({
     name: 'offerings',
     directory: 'offerings',
+    include: '*.mdx',
     schema: offeringSchema,
   }),
   solutions: defineCollection({
     name: 'solutions',
     directory: 'solutions',
+    include: '*.mdx',
     schema: solutionSchema,
   }),
   redirects: defineCollection({
     name: 'redirects',
     directory: 'shared',
+    include: '*.mdx',
     schema: redirectSchema,
   }),
 };
 
-export const schema = defineSchema(collections);
