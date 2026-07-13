@@ -132,8 +132,10 @@ export function isVendorSolutionEntry(entry: FsContentEntry, vendorSlug?: string
   return (
     entry.status === 'published' &&
     entry.pathSegments[0] === 'vendors' &&
-    entry.pathSegments.length === 4 &&
+    entry.pathSegments.length === 5 &&
     entry.pathSegments[2] === 'solutions' &&
+    entry.pathSegments[3] === entry.slug &&
+    entry.pathSegments[4] === `${entry.slug}.mdx` &&
     (vendorSlug ? entry.pathSegments[1] === vendorSlug : true)
   );
 }

@@ -73,7 +73,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             </ul>
             <OfferingList
               offerings={allContent
-                .filter((entry) => entry.status === 'published' && entry.pathSegments[0] === 'vendors' && entry.pathSegments[2] === 'solutions' && entry.categoryIds.includes(category.slug))
+                .filter((entry) => entry.status === 'published' && entry.pathSegments[0] === 'vendors' && entry.pathSegments[2] === 'solutions' && entry.pathSegments.length === 5 && entry.pathSegments[3] === entry.slug && entry.pathSegments[4] === `${entry.slug}.mdx` && entry.categoryIds.includes(category.slug))
                 .map((entry) => ({
                   id: entry.slug,
                   name: entry.name,
