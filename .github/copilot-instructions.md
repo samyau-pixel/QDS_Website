@@ -1,4 +1,4 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read specs/001-b2b-static-website/plan.md
+shell commands, and other important information, read specs/002-solution-product-links/plan.md
 <!-- SPECKIT END -->
