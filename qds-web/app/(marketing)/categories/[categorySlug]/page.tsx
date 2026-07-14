@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import path from 'path';
 import SiteHeader from '@/components/layout/site-header';
 import SiteFooter from '@/components/layout/site-footer';
 import Container from '@/components/layout/container';
@@ -7,7 +8,7 @@ import Breadcrumbs from '@/components/layout/breadcrumbs';
 import RelatedContent from '@/components/marketing/related-content';
 import OfferingList from '@/components/marketing/offering-list';
 import { getCategoryBySlug, getCategorySlugs } from '@/lib/content/categories';
-import { isVendorProfileEntry, loadAllContentEntries, loadContentEntries } from '@/lib/content/fs-content';
+import { isVendorProfileEntry, isVendorSolutionEntry, loadAllContentEntries, loadContentEntries, createSolutionCardViewModel } from '@/lib/content/fs-content';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
@@ -50,6 +51,21 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
     { label: category.name },
   ];
 
+  // Create solution card view models for published vendor solutions in this category
+  const solutionCards = await Promise.all(
+    allContent
+      .filter((entry) => 
+        entry.status === 'published' && 
+        isVendorSolutionEntry(entry) && 
+        entry.categoryIds.includes(category.slug)
+      )
+      .map(async (entry) => {
+        // Use dirname for cross-platform path handling (Windows and POSIX)
+        const solutionFolderPath = path.join(process.cwd(), 'content', path.dirname(entry.relativePath));
+        return createSolutionCardViewModel(entry, solutionFolderPath);
+      })
+  );
+
   return (
     <>
       <SiteHeader />
@@ -79,6 +95,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                   name: entry.name,
                   summary: entry.summary,
                 }))}
+              solutionCards={solutionCards}
             />
             <RelatedContent
               title="Related Vendors"

@@ -3,6 +3,27 @@ import type { Dirent } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
+export interface SolutionImageAsset {
+  fileName: string;
+  relativePath: string;
+  publicPath: string;
+  extension: string;
+  sortOrder: number;
+  isDefaultSelected: boolean;
+}
+
+export interface SolutionCardViewModel {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string;
+  productUrl: string | undefined;
+  images: SolutionImageAsset[];
+  selectedImage: SolutionImageAsset | undefined;
+  showProductDetails: boolean;
+  vendorSlug: string;
+}
+
 export interface FsContentEntry {
   id: string;
   slug: string;
@@ -35,10 +56,99 @@ export interface FsContentEntry {
     title: string | undefined;
     description: string | undefined;
   } | undefined;
+  productUrl: string | undefined;
 }
 
 function toArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+}
+
+/**
+ * Validates that a string is a valid absolute HTTP/HTTPS URL
+ */
+export function isValidProductUrl(url: unknown): boolean {
+  if (typeof url !== 'string') return false;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Discovers all supported image files (.png, .jpg, .jpeg) in a directory
+ * Returns them sorted lexically with metadata for the solution card
+ * Generates API route URLs to serve images from the content directory
+ */
+export async function discoverSolutionImages(solutionFolderPath: string, vendorSlug: string, solutionSlug: string): Promise<SolutionImageAsset[]> {
+  try {
+    const entries = await fs.readdir(solutionFolderPath, { withFileTypes: true });
+    const imageExtensions = ['.png', '.jpg', '.jpeg'];
+    
+    const images: SolutionImageAsset[] = [];
+    
+    for (const entry of entries) {
+      if (!entry.isFile()) continue;
+      
+      const ext = path.extname(entry.name).toLowerCase();
+      if (!imageExtensions.includes(ext)) continue;
+      
+      const fileName = entry.name;
+      const relativePath = path.join(solutionFolderPath, fileName);
+      // Generate API route URL: /api/images/{vendor}/{solution}/{image}
+      const publicUrlPath = `/api/images/${encodeURIComponent(vendorSlug)}/${encodeURIComponent(solutionSlug)}/${encodeURIComponent(fileName)}`;
+      
+      images.push({
+        fileName,
+        relativePath,
+        publicPath: publicUrlPath,
+        extension: ext,
+        sortOrder: 0, // Will be set after sorting
+        isDefaultSelected: false,
+      });
+    }
+    
+    // Sort lexically for deterministic ordering
+    images.sort((a, b) => a.fileName.localeCompare(b.fileName));
+    
+    // Assign sort order and mark first as default
+    images.forEach((img, index) => {
+      img.sortOrder = index;
+      if (index === 0) {
+        img.isDefaultSelected = true;
+      }
+    });
+    
+    return images;
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Creates a SolutionCardViewModel from a vendor solution entry
+ */
+export async function createSolutionCardViewModel(
+  entry: FsContentEntry,
+  solutionFolderPath: string
+): Promise<SolutionCardViewModel> {
+  const vendorSlug = entry.pathSegments[1] || '';
+  const solutionSlug = entry.slug;
+  const images = await discoverSolutionImages(solutionFolderPath, vendorSlug, solutionSlug);
+  const productUrl = isValidProductUrl(entry.productUrl) ? entry.productUrl : undefined;
+  
+  return {
+    id: entry.id,
+    slug: entry.slug,
+    name: entry.name,
+    summary: entry.summary,
+    productUrl,
+    images,
+    selectedImage: images.length > 0 ? images[0] : undefined,
+    showProductDetails: productUrl !== undefined,
+    vendorSlug,
+  };
 }
 
 async function readMdxFiles(basePath: string, relativeRoot = ''): Promise<FsContentEntry[]> {
@@ -101,6 +211,7 @@ async function readMdxFiles(basePath: string, relativeRoot = ''): Promise<FsCont
                 description: typeof (data.seo as Record<string, unknown>).description === 'string' ? (data.seo as Record<string, unknown>).description as string : undefined,
               }
             : undefined,
+          productUrl: typeof data.productUrl === 'string' ? data.productUrl : undefined,
         },
       ];
     })

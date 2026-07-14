@@ -55,7 +55,7 @@ As a content editor, I can provide the product URL and image assets in the solut
 
 ### Edge Cases
 
-- A solution has more than one image asset in its folder; the card should use a single clearly chosen primary image so the card stays consistent.
+- A solution has more than one image asset in its folder; the card should use the first discovered image as the default preview so the card stays consistent.
 - A solution is missing a product URL; the card should not expose a broken View product details action.
 - A solution image is unavailable or fails to load; the page should preserve the card layout and avoid visual breakage.
 - A product URL is long or includes query parameters; the destination should still open correctly and remain usable.
@@ -94,3 +94,66 @@ As a content editor, I can provide the product URL and image assets in the solut
 - Product URLs are external absolute destinations.
 - The category page keeps its existing navigation and solution grouping rules.
 - Published solutions are expected to be content-complete before release.
+
+## Clarifications
+
+### Session 2026-07-13
+
+- Q: Should the solution frontmatter include `images` array and `primaryImage` fields, or rely solely on co-located folder images discovered at build time? → A: Remove `images` and `primaryImage` from frontmatter; use only co-located folder images discovered at build time.
+
+## Design: Solution Card
+
+### Overview
+
+Each solution card is a compact, self-contained presentation that surfaces imagery, identity, summary, and a clear call-to-action to the product destination. The card is divided into three vertical regions: an upper enlarged-image area, a middle thumbnail gallery, and a lower content & action area.
+
+### Layout
+
+- **Upper (Enlarged image):** Displays one large primary image for the solution. By default this shows the primary image from the solution content. When a visitor clicks any thumbnail in the middle region, the upper area updates to show the clicked image enlarged. The enlarged image maintains aspect-fit so it does not crop important content; the card reserves a fixed visual height proportional to the card width for layout stability.
+
+- **Middle (Thumbnail gallery):** Shows all available images from the solution's content folder as small, tappable thumbnails in a single horizontal strip or a compact grid depending on available width. Thumbnails include a visible selected state (outline or subtle shadow) indicating the image currently shown in the upper area. Clicking or keyboard-activating a thumbnail swaps the enlarged image in the upper area.
+
+- **Lower (Name, summary, CTA):** Contains the solution name (prominent), a one-line summary (secondary text), and a visible `View product details` action. The CTA opens the configured external product URL in a new tab/window. If there is no valid product URL the CTA is hidden.
+
+### Interaction & Behavior
+
+- Clicking/tapping a thumbnail updates the enlarged image with a smooth cross-fade transition (200ms ease-in-out).
+- Keyboard support: thumbnails are focusable (Tab), selectable via `Enter`/`Space`, and the selected thumbnail exposes `aria-current="true"` while the enlarged image has an accessible description (aria-describedby) describing the image and its role.
+- Lazy loading: thumbnails and enlarged images load lazily with a low-quality placeholder to improve perceived performance.
+- If the enlarged image fails to load, show a consistent fallback placeholder (e.g., a neutral product silhouette) and preserve the layout height to avoid content reflow.
+
+### Content Model / Example Frontmatter
+
+Solution content entries MUST include fields supporting the card. Example MDX frontmatter:
+
+---
+title: "Solution Name"
+summary: "One-line summary for category card"
+productUrl: "https://vendor.example.com/product/123"
+---
+
+- `productUrl` (optional): absolute external destination for the `View product details` CTA.
+- All `.png`, `.jpg`, and `.jpeg` files in the same solution folder are automatically discovered at build time and used as the thumbnail gallery. The first discovered image becomes the default enlarged preview.
+
+### Accessibility
+
+- All images must include `alt` text in the content metadata or fallback to the solution `title` if absent.
+- Thumbnails expose `role="tablist"` semantics with `aria-selected` on the active thumbnail for screen readers.
+- The `View product details` CTA is a standard anchor with `rel="noopener noreferrer"` and `target="_blank"` and includes a visually hidden hint for screen-reader users that it opens in a new tab.
+
+### Responsive Behavior
+
+- Desktop: show the thumbnail strip horizontally centered below the enlarged image.
+- Tablet / small screens: thumbnail strip becomes horizontally scrollable if there are more items than fit; the enlarged image scales down proportionally.
+- Mobile: use a single-row thumbnail scroller or a collapsed control (e.g., small gallery button) when vertical space is constrained.
+
+### Edge Cases & Requirements Mapping
+
+- If multiple images exist in the solution folder, the first discovered image is used as the default enlarged preview (FR-006).
+- If no images exist in the solution folder, render a standard placeholder image that preserves layout (maps to FR-007).
+- If no `productUrl` is provided or it fails basic validation, hide the CTA to avoid a broken action (FR-005).
+
+### Implementation Notes for Developers
+
+- CSS: prefer CSS grid for the card, with aspect-ratio utilities (or padding-top trick) to reserve enlarged-image height.
+- JS: minimal client-side logic to swap enlarged image, manage selected thumbnail state, and ensure keyboard interaction. Prefer progressive enhancement—cards render sensibly without JS (show primary image + content + CTA).
