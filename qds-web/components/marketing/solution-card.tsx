@@ -69,6 +69,7 @@ export default function SolutionCard({ viewModel }: SolutionCardProps) {
 
       {/* Lower Region: Name, Summary, CTA */}
       <div className="p-4">
+        <p className="text-sm text-blue-600 font-medium mb-1">{viewModel.vendorName}</p>
         <h4 className="font-semibold text-slate-900 mb-1">{viewModel.name}</h4>
         <p className="text-sm text-slate-600 mb-3">{viewModel.summary}</p>
         
