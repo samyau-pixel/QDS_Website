@@ -1,17 +1,8 @@
 import Link from 'next/link';
+import { getPublishedCategories } from '@/lib/content/categories';
 
-export default function SiteHeader() {
-  const categories = [
-    { href: '/categories/airflow-management', label: 'Airflow Management' },
-    { href: '/categories/aisle-containment', label: 'Aisle Containment' },
-    { href: '/categories/smart-rack', label: 'Smart Rack' },
-    { href: '/categories/power-management', label: 'Power Management' },
-    { href: '/categories/environmental-monitoring', label: 'Environmental Monitoring' },
-    { href: '/categories/asset-tracking', label: 'Real-Time Asset Tracking' },
-    { href: '/categories/remote-access-management', label: 'Remote Access & Management' },
-    { href: '/categories/data-center-infrastructure-management', label: 'Data Center Infrastructure Management' },
-    { href: '/categories/connectivity-solutions', label: 'Connectivity Solutions' },
-  ];
+export default async function SiteHeader() {
+  const categories = await getPublishedCategories();
 
   return (
     <header className="bg-white shadow-sm">
@@ -38,12 +29,12 @@ export default function SiteHeader() {
               <div className="absolute left-0 top-full mt-2 w-64 bg-white rounded-lg shadow-xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <ul className="py-2">
                   {categories.map((category) => (
-                    <li key={category.href}>
+                    <li key={category.slug}>
                       <Link 
-                        href={category.href}
+                        href={`/categories/${category.slug}`}
                         className="block px-4 py-2 text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
-                        {category.label}
+                        {category.name}
                       </Link>
                     </li>
                   ))}
