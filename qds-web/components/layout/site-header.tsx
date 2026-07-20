@@ -10,6 +10,11 @@ export default function SiteHeader() {
           </Link>
           <ul className="flex space-x-6">
             <li>
+              <Link href="/" className="text-slate-700 hover:text-blue-600 font-medium">
+                Home
+              </Link>
+            </li>
+            <li>
               <Link href="/vendors" className="text-slate-700 hover:text-blue-600">
                 Vendors
               </Link>
