@@ -22,6 +22,7 @@ export interface SolutionCardViewModel {
   selectedImage: SolutionImageAsset | undefined;
   showProductDetails: boolean;
   vendorSlug: string;
+  vendorName: string;
 }
 
 export interface FsContentEntry {
@@ -138,6 +139,20 @@ export async function createSolutionCardViewModel(
   const images = await discoverSolutionImages(solutionFolderPath, vendorSlug, solutionSlug);
   const productUrl = isValidProductUrl(entry.productUrl) ? entry.productUrl : undefined;
   
+  // Load vendor name from vendor file
+  let vendorName = vendorSlug;
+  try {
+    const vendorFilePath = path.join(process.cwd(), 'content', 'vendors', vendorSlug, `${vendorSlug}.mdx`);
+    const vendorSource = await fs.readFile(vendorFilePath, 'utf8');
+    const vendorParsed = matter(vendorSource);
+    const vendorData = vendorParsed.data as Record<string, unknown>;
+    if (typeof vendorData.name === 'string') {
+      vendorName = vendorData.name;
+    }
+  } catch {
+    // If vendor file not found, use slug as name
+  }
+  
   return {
     id: entry.id,
     slug: entry.slug,
@@ -148,6 +163,7 @@ export async function createSolutionCardViewModel(
     selectedImage: images.length > 0 ? images[0] : undefined,
     showProductDetails: productUrl !== undefined,
     vendorSlug,
+    vendorName,
   };
 }
 
