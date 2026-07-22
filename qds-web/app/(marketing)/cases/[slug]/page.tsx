@@ -10,8 +10,9 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const caseStudy = await getCaseBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const caseStudy = await getCaseBySlug(slug);
   if (!caseStudy) return { title: 'Case Study' };
   return {
     title: caseStudy.seo?.title ?? `${caseStudy.name} | Case Study`,
@@ -19,8 +20,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function CasePage({ params }: { params: { slug: string } }) {
-  const caseStudy = await getCaseBySlug(params.slug);
+export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const caseStudy = await getCaseBySlug(slug);
   if (!caseStudy) notFound();
 
   return (
