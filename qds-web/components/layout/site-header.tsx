@@ -42,6 +42,11 @@ export default async function SiteHeader() {
               </div>
             </li>
             <li>
+              <Link href="/cases" className="text-slate-700 hover:text-blue-600">
+                Case Studies
+              </Link>
+            </li>
+            <li>
               <Link href="/contact" className="text-blue-600 hover:text-blue-800 font-medium">
                 Contact
               </Link>
